@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Francesco Del Re</Authors>
+    <Company>Francesco Del Re</Company>
+    <Copyright>MIT</Copyright>
+    <RepositoryUrl>https://github.com/engineering87/SharpSanitizer</RepositoryUrl>
+    <RepositoryType>https://github.com/engineering87/SharpSanitizer</RepositoryType>
+    <Description>Project dedicated to the parametric sanitization of the properties of any object</Description>
+    <PackageProjectUrl>https://github.com/engineering87/SharpSanitizer</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

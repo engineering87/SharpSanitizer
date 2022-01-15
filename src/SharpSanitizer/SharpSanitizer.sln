@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSanitizer", "SharpSanitizer.csproj", "{BE4CE0A5-9122-4FE4-A35C-29C5D01BCEA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpSanitizer.Test", "..\SharpSanitizer.Test\SharpSanitizer.Test.csproj", "{C0397BD7-D5D0-40F3-9EF9-37E3B6653302}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE4CE0A5-9122-4FE4-A35C-29C5D01BCEA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE4CE0A5-9122-4FE4-A35C-29C5D01BCEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE4CE0A5-9122-4FE4-A35C-29C5D01BCEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE4CE0A5-9122-4FE4-A35C-29C5D01BCEA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0397BD7-D5D0-40F3-9EF9-37E3B6653302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0397BD7-D5D0-40F3-9EF9-37E3B6653302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0397BD7-D5D0-40F3-9EF9-37E3B6653302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0397BD7-D5D0-40F3-9EF9-37E3B6653302}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5AA8FD15-4C87-4FC3-B2C8-5B28635F2B8C}
+	EndGlobalSection
+EndGlobal

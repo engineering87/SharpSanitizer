@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <Copyright>MIT</Copyright>
+
+    <Description>Project dedicated to the parametric sanitization of the properties of any object</Description>
+
+    <Product>SharpSanitizer</Product>
+
+    <Company>Francesco Del Re</Company>
+
+    <Authors>Francesco Del Re</Authors>
+
+    <PackageProjectUrl></PackageProjectUrl>
+
+    <RepositoryType>https://github.com/engineering87/SharpSanitizer</RepositoryType>
+
+    <RepositoryUrl>https://github.com/engineering87/SharpSanitizer</RepositoryUrl>
+
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
+    <PackageReference Include="coverlet.collector" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharpSanitizer\SharpSanitizer.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,5 +1,5 @@
 # SharpSanitizer
-SharpSanitizer is a C# .NET 5.0 library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.
+SharpSanitizer is a C# .NET 6.0 library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.
 The constraints and contextual sanitization rules are specified parametrically.
 
 ### How it works
@@ -51,7 +51,13 @@ Currently the supported rules are as follows:
         ///<summary>The string property cannot contain spaces</summary>
         NoWhiteSpace,
         ///<summary>The string property cannot contain special characters</summary>
-        NoSpecialCharacters
+        NoSpecialCharacters,
+        ///<summary>The string property must contains only digits</summary>
+        OnlyDigit,
+        ///<summary>The number property must have a limited number of decimals places</summary>
+        MaxDecimalPlaces,
+        ///<summary>The object property cannot be DbNull</summary>
+        NoDbNull
 ```
 rules and data types will be extended in future versions.
 

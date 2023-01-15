@@ -24,6 +24,12 @@ namespace SharpSanitizer.Enum
         ///<summary>The string property cannot contain spaces</summary>
         NoWhiteSpace,
         ///<summary>The string property cannot contain special characters</summary>
-        NoSpecialCharacters
+        NoSpecialCharacters,
+        ///<summary>The string property must contains only digits</summary>
+        OnlyDigit,
+        ///<summary>The number property must have a limited number of decimals places</summary>
+        MaxDecimalPlaces,
+        ///<summary>The object property cannot be DbNull</summary>
+        NoDbNull
     }
 }

@@ -9,12 +9,34 @@ namespace SharpSanitizer.Test.Model
     /// </summary>
     public class FooModel
     {
+        /// <summary>
+        /// String properties
+        /// </summary>
         public string StringMaxNotNull { get; set; }
         public string StringMax { get; set; }
         public string StringNoWhiteSpace { get; set; }
         public string StringNoSpecialCharacters { get; set; }
+        public string StringOnlyDigit { get; set; }
+        /// <summary>
+        /// Integer properties
+        /// </summary>
         public int MinIntegerProperty { get; set; }
         public int MaxIntegerProperty { get; set; }
-        public List<string> ListProperty { get; set; }
+        /// <summary>
+        /// List properties
+        /// </summary>
+        public List<string> ListPropertyNotNull { get; set; }
+        /// <summary>
+        /// Decimal properties
+        /// </summary>
+        public decimal DecimalMaxDecimalsPlaces { get; set; }
+        /// <summary>
+        /// Double properties
+        /// </summary>
+        public double DoubleMaxDecimalsPlaces { get; set; }
+        /// <summary>
+        /// Object properties
+        /// </summary>
+        public object ObjectPropertyNoDbNull { get; set; }
     }
 }

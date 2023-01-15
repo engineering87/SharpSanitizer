@@ -12,6 +12,11 @@ namespace SharpSanitizer.Helper
     /// </summary>
     public static class GenericsHelper
     {
+        public static Type GetType(TypeCode code)
+        {
+            return Type.GetType("System." + System.Enum.GetName(typeof(TypeCode), code));
+        }
+
         public static bool Implements<T>(this Type type)
         {
             return typeof(T).IsAssignableFrom(type);

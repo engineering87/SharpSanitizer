@@ -27,7 +27,8 @@ namespace SharpSanitizer.Test
                 { "StringMaxNotNull", new Constraint(ConstraintType.MaxNotNull, MaxNotNullRef) },
                 { "StringMax", new Constraint(ConstraintType.Max, MaxRef) },
                 { "StringNoWhiteSpace", new Constraint(ConstraintType.NoWhiteSpace) },
-                { "StringNoSpecialCharacters", new Constraint(ConstraintType.NoSpecialCharacters) }
+                { "StringNoSpecialCharacters", new Constraint(ConstraintType.NoSpecialCharacters) },
+                { "StringOnlyDigit", new Constraint(ConstraintType.OnlyDigit) }
             };
 
             _sharpSanitizer = new SharpSanitizer<FooModel>(constraints);
@@ -41,7 +42,8 @@ namespace SharpSanitizer.Test
                 StringMaxNotNull = null,
                 StringMax = "abcdefghilmnopqrstuvz",
                 StringNoWhiteSpace = "fjd auwc s 111",
-                StringNoSpecialCharacters = "%test&''^@"
+                StringNoSpecialCharacters = "%test&''^@",
+                StringOnlyDigit = "svvev 79326 .-"
             };
 
             _sharpSanitizer.Sanitize(fooModel);
@@ -50,6 +52,7 @@ namespace SharpSanitizer.Test
             Assert.IsNotNull(fooModel.StringMaxNotNull);
             Assert.IsFalse(fooModel.StringNoWhiteSpace.Any(Char.IsWhiteSpace));
             Assert.IsFalse(fooModel.StringNoSpecialCharacters.Any(ch => !Char.IsLetterOrDigit(ch)));
+            Assert.IsTrue(fooModel.StringOnlyDigit.All(char.IsDigit));
         }
     }
 }

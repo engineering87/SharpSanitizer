@@ -46,7 +46,7 @@ namespace SharpSanitizer
                         break;
                     case TypeCode.Object:
                         {
-                            var propertyValueSanitize = Activator.CreateInstance(pi.PropertyType);
+                            var propertyValueSanitize = ApplyObjectConstraint(propertyValue, pi.PropertyType, constraint);
                             pi.SetValue(obj, propertyValueSanitize);
                             break;
                         }
@@ -83,13 +83,20 @@ namespace SharpSanitizer
                     case TypeCode.Single:
                         break;
                     case TypeCode.Double:
-                        break;
+                        {
+                            var propertyValueSanitize = ApplyDoubleConstraint((double)propertyValue, constraint);
+                            pi.SetValue(obj, propertyValueSanitize);
+                            break;
+                        }
                     case TypeCode.Decimal:
-                        break;
+                        {
+                            var propertyValueSanitize = ApplyDecimalConstraint((decimal)propertyValue, constraint);
+                            pi.SetValue(obj, propertyValueSanitize);
+                            break;
+                        }
                     case TypeCode.DateTime:
                         break;
                 }
-
             }
         }
 
@@ -113,24 +120,33 @@ namespace SharpSanitizer
         /// <returns></returns>
         private static string ApplyStringConstraint(string propertyValue, Constraint constraint)
         {
+            var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.NotNull:
                     return propertyValue?.Trim() ?? string.Empty;
                 case ConstraintType.Max:
                     {
-                        var integerRefValue = constraint.ConstraintValue.IntegerValue;
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
                         var trimString = propertyValue?.Trim();
-                        return trimString?.Length <= integerRefValue
-                            ? trimString : trimString?.Substring(0, integerRefValue);
+                        return trimString?.Length <= constraintRefValue.Value
+                            ? trimString : trimString?.Substring(0, constraintRefValue.Value);
                     }
                 case ConstraintType.MaxNotNull:
                     {
-                        var integerRefValue = constraint.ConstraintValue.IntegerValue;
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
                         if (propertyValue == null) return string.Empty;
                         var trimString = propertyValue?.Trim();
-                        return trimString?.Length <= integerRefValue
-                            ? trimString : trimString?.Substring(0, integerRefValue);
+                        return trimString?.Length <= constraintRefValue.Value
+                            ? trimString : trimString?.Substring(0, constraintRefValue.Value);
                     }
                 case ConstraintType.Lowercase:
                     {
@@ -152,6 +168,11 @@ namespace SharpSanitizer
                         if (propertyValue == null) return string.Empty;
                         return Regex.Replace(propertyValue, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
                     }
+                case ConstraintType.OnlyDigit:
+                    {
+                        if (propertyValue == null) return string.Empty;
+                        return Regex.Replace(propertyValue, @"[^\d]+", "").Trim();
+                    }
                 default:
                     return propertyValue?.Trim();
             }
@@ -165,20 +186,112 @@ namespace SharpSanitizer
         /// <returns></returns>
         private static int ApplyIntegerConstraint(int propertyValue, Constraint constraint)
         {
-            var integerRefValue = constraint.ConstraintValue.IntegerValue;
+            var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.Min:
                     {
-                        return propertyValue > integerRefValue ? integerRefValue : propertyValue;
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        return propertyValue > constraintRefValue.Value ? constraintRefValue.Value : propertyValue;
                     }
                 case ConstraintType.Max:
                     {
-                        return propertyValue > integerRefValue ? integerRefValue : propertyValue;
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        return propertyValue > constraintRefValue.Value ? constraintRefValue.Value : propertyValue;
                     }
                 case ConstraintType.NotNegative:
                     {
-                        return propertyValue < 0 ? integerRefValue : propertyValue;
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        return propertyValue < 0 ? constraintRefValue.Value : propertyValue;
+                    }
+                default:
+                    return propertyValue;
+            }
+        }
+
+        /// <summary>
+        /// Apply the current constraint to the decimal property.
+        /// </summary>
+        /// <param name="propertyValue"></param>
+        /// <param name="constraint"></param>
+        /// <returns></returns>
+        private static decimal ApplyDecimalConstraint(decimal propertyValue, Constraint constraint)
+        {
+            var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
+            switch (constraint.ConstraintType)
+            {
+                case ConstraintType.MaxDecimalPlaces:
+                    {
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        decimal step = (decimal)Math.Pow(10, constraintRefValue.Value);
+                        decimal tmp = Math.Truncate(step * propertyValue);
+                        return tmp / step;
+                    }
+                default:
+                    return propertyValue;
+            }
+        }
+
+        /// <summary>
+        /// Apply the current constraint to the double property.
+        /// </summary>
+        /// <param name="propertyValue"></param>
+        /// <param name="constraint"></param>
+        /// <returns></returns>
+        private static double ApplyDoubleConstraint(double propertyValue, Constraint constraint)
+        {
+            var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
+            switch (constraint.ConstraintType)
+            {
+                case ConstraintType.MaxDecimalPlaces:
+                    {
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        double step = Math.Pow(10, constraintRefValue.Value);
+                        return Math.Truncate(propertyValue * step) / step;
+                    }
+                default:
+                    return propertyValue;
+            }
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="propertyValue"></param>
+        /// <param name="constraint"></param>
+        /// <returns></returns>
+        private static object ApplyObjectConstraint(object propertyValue, Type propertyType, Constraint constraint)
+        {
+            //var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
+            switch (constraint.ConstraintType)
+            {
+                case ConstraintType.NotNull:
+                    {
+                        return Activator.CreateInstance(propertyType);
+                    }
+                case ConstraintType.NoDbNull:
+                    {
+                        return null;
                     }
                 default:
                     return propertyValue;

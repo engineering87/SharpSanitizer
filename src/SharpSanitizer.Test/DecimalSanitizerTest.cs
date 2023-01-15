@@ -4,41 +4,39 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpSanitizer.Entity;
 using SharpSanitizer.Enum;
 using SharpSanitizer.Test.Model;
-using System;
 using System.Collections.Generic;
 
 namespace SharpSanitizer.Test
 {
     [TestClass]
-    public class ObjectSanitizerTest
+    public class DecimalSanitizerTest
     {
         private ISharpSanitizer<FooModel> _sharpSanitizer;
+
+        private const int MaxRef = 2;
 
         [TestInitialize]
         public void TestInitialize()
         {
             var constraints = new Dictionary<string, Constraint>()
             {
-                { "ListPropertyNotNull", new Constraint(ConstraintType.NotNull) },
-                { "ObjectPropertyNoDbNull", new Constraint(ConstraintType.NoDbNull) }
+                { "DecimalMaxDecimalsPlaces", new Constraint(ConstraintType.MaxDecimalPlaces, MaxRef) }
             };
 
             _sharpSanitizer = new SharpSanitizer<FooModel>(constraints);
         }
 
         [TestMethod]
-        public void TestList()
+        public void TestString()
         {
             var fooModel = new FooModel()
             {
-                ListPropertyNotNull = null,
-                ObjectPropertyNoDbNull = DBNull.Value
+                DecimalMaxDecimalsPlaces = 0.123456789M
             };
 
             _sharpSanitizer.Sanitize(fooModel);
 
-            Assert.IsFalse(fooModel.ListPropertyNotNull == null);
-            Assert.IsFalse(fooModel.ObjectPropertyNoDbNull == DBNull.Value);
+            Assert.IsTrue(fooModel.DecimalMaxDecimalsPlaces == 0.12M);
         }
     }
 }

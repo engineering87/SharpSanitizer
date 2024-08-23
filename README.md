@@ -5,7 +5,7 @@
 [![issues - SharpSanitizer](https://img.shields.io/github/issues/engineering87/SharpSanitizer)](https://github.com/engineering87/SharpSanitizer/issues)
 [![stars - SharpSanitizer](https://img.shields.io/github/stars/engineering87/SharpSanitizer?style=social)](https://github.com/engineering87/SharpSanitizer)
 
-SharpSanitizer is a C# .NET 6.0 library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.
+SharpSanitizer is a .NET library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.
 The constraints and contextual sanitization rules are specified parametrically.
 
 ### How it works
@@ -29,7 +29,7 @@ as a second step create an instance of the SharpSanitizer specifying the type of
 var sharpSanitizer = new SharpSanitizer<FooModel>(constraints);
 ```
 
-at this point it is enough to invoke the method **Sanitize** to apply the rules to the object:
+at this point it is enough to invoke the method `Sanitize` to apply the rules to the object:
 
 ```csharp
 sharpSanitizer.Sanitize(fooModel);
@@ -73,15 +73,13 @@ The library is available on NuGet packetmanager.
 
 https://www.nuget.org/packages/SharpSanitizer/
 
-### Contributing
+## Contributing
+
 Thank you for considering to help out with the source code!
 If you'd like to contribute, please fork, fix, commit and send a pull request for the maintainers to review and merge into the main code base.
 
-**Getting started with Git and GitHub**
-
- * [Setting up Git for Windows and connecting to GitHub](http://help.github.com/win-set-up-git/)
- * [Forking a GitHub repository](http://help.github.com/fork-a-repo/)
- * [The simple guide to GIT guide](http://rogerdudler.github.com/git-guide/)
+ * [Setting up Git](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git)
+ * [Fork the repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
  * [Open an issue](https://github.com/engineering87/SharpSanitizer/issues) if you encounter a bug or have a suggestion for improvements/features
 
 ### Licensee

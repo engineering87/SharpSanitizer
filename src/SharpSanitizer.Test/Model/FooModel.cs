@@ -17,6 +17,10 @@ namespace SharpSanitizer.Test.Model
         public string StringNoWhiteSpace { get; set; }
         public string StringNoSpecialCharacters { get; set; }
         public string StringOnlyDigit { get; set; }
+        public string ValidDatetime { get; set; }
+        public string ForceToValidDatetime { get; set; }
+        public string StringSingleChar { get; set; }
+        public string StringValidGuid { get; set; }
         /// <summary>
         /// Integer properties
         /// </summary>

@@ -4,6 +4,7 @@ using SharpSanitizer.Entity;
 using SharpSanitizer.Enum;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -161,7 +162,7 @@ namespace SharpSanitizer
                 case ConstraintType.NoWhiteSpace:
                     {
                         if (propertyValue == null) return string.Empty;
-                        return Regex.Replace(propertyValue, @"\s+", ""); ;
+                        return Regex.Replace(propertyValue, @"\s+", "");
                     }
                 case ConstraintType.NoSpecialCharacters:
                     {
@@ -172,6 +173,32 @@ namespace SharpSanitizer
                     {
                         if (propertyValue == null) return string.Empty;
                         return Regex.Replace(propertyValue, @"[^\d]+", "").Trim();
+                    }
+                case ConstraintType.ValidDatetime:
+                    {
+                        if (propertyValue == null) return string.Empty;
+                        if (DateTime.TryParse(propertyValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                            return propertyValue?.Trim();
+                        return string.Empty;
+                    }
+                case ConstraintType.ForceToValidDatetime:
+                    {
+                        if (propertyValue == null) return DateTime.MinValue.ToString();
+                        if (DateTime.TryParse(propertyValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                            return propertyValue?.Trim();
+                        return DateTime.MinValue.ToString();
+                    }
+                case ConstraintType.SingleChar:
+                    {
+                        if (propertyValue == null) return string.Empty;
+                        return propertyValue.Trim().Substring(0, 1);
+                    }
+                case ConstraintType.ForceValidGuid:
+                    {
+                        if (propertyValue == null) return string.Empty;
+                        if(Guid.TryParse(propertyValue.Trim(), out _))
+                            return propertyValue?.Trim();
+                        return Guid.NewGuid().ToString();
                     }
                 default:
                     return propertyValue?.Trim();

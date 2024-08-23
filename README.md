@@ -63,8 +63,17 @@ Currently the supported rules are as follows:
         ///<summary>The number property must have a limited number of decimals places</summary>
         MaxDecimalPlaces,
         ///<summary>The object property cannot be DbNull</summary>
-        NoDbNull
+        NoDbNull,
+        ///<summary>The string property is a valid Datetime if parsed</summary>
+        ValidDatetime,
+        ///<summary>The string property is a valid Datetime if parsed, forced to the MinValue</summary>
+        ForceToValidDatetime,
+        ///<summary>The string property must be a single char</summary>
+        SingleChar,
+        ///<summary>The string property represent a valid Guid</summary>
+        ForceValidGuid
 ```
+
 rules and data types will be extended in future versions.
 
 ### NuGet

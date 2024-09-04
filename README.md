@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nuget](https://img.shields.io/nuget/v/SharpSanitizer?style=plastic)](https://www.nuget.org/packages/SharpSanitizer)
+![NuGet Downloads](https://img.shields.io/nuget/dt/RESTSchemaRetry)
 [![issues - SharpSanitizer](https://img.shields.io/github/issues/engineering87/SharpSanitizer)](https://github.com/engineering87/SharpSanitizer/issues)
+[![Build](https://github.com/engineering87/SharpSanitizer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/engineering87/SharpSanitizer/actions/workflows/dotnet.yml)
 [![stars - SharpSanitizer](https://img.shields.io/github/stars/engineering87/SharpSanitizer?style=social)](https://github.com/engineering87/SharpSanitizer)
 
 SharpSanitizer is a .NET library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.

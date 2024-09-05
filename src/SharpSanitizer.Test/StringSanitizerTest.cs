@@ -25,14 +25,14 @@ namespace SharpSanitizer.Test
             var constraints = new Dictionary<string, Constraint>()
             {
                 { "StringMaxNotNull", new Constraint(ConstraintType.MaxNotNull, MaxNotNullRef) },
-                { "StringMax", new Constraint(ConstraintType.Max, MaxRef) },
+                { "StringMax", new Constraint(ConstraintType.MaxLength, MaxRef) },
                 { "StringNoWhiteSpace", new Constraint(ConstraintType.NoWhiteSpace) },
                 { "StringNoSpecialCharacters", new Constraint(ConstraintType.NoSpecialCharacters) },
                 { "StringOnlyDigit", new Constraint(ConstraintType.OnlyDigit) },
                 { "ValidDatetime", new Constraint(ConstraintType.ValidDatetime) },
                 { "ForceToValidDatetime", new Constraint(ConstraintType.ForceToValidDatetime) },
                 { "StringSingleChar", new Constraint(ConstraintType.SingleChar) },
-                { "StringValidGuid", new Constraint(ConstraintType.ForceValidGuid) }
+                { "StringValidGuid", new Constraint(ConstraintType.ValidGuid) }
             };
 
             _sharpSanitizer = new SharpSanitizer<FooModel>(constraints);

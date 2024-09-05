@@ -13,12 +13,13 @@ namespace SharpSanitizer
         /// <summary>
         /// Sanitizes the properties of the object.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">The object to validate</param>
         void Sanitize(T obj);
+
         /// <summary>
         /// Sanitizes the properties of objects within the list.
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="list">The list of the objects to validate</param>
         void Sanitize(IEnumerable<T> list);
     }
 }

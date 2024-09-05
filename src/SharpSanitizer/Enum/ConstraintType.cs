@@ -9,12 +9,16 @@ namespace SharpSanitizer.Enum
     {
         ///<summary>The object property cannot be NULL</summary>
         NotNull,
+        ///<summary>The string property length cannot be less than the constraint</summary>
+        MinLength,
         ///<summary>The string property length cannot be greater than the constraint</summary>
-        Max,
+        MaxLength,
         ///<summary>The string property cannot be NULL or greater than the constraint</summary>
         MaxNotNull,
+        ///<summary>The integer property cannot be greater than the constraint</summary>
+        MaxValue,
         ///<summary>The integer property cannot be less than the constraint</summary>
-        Min,
+        MinValue,
         ///<summary>The integer property cannot be negative</summary>
         NotNegative,
         ///<summary>The string property must be uppercase</summary>
@@ -38,6 +42,8 @@ namespace SharpSanitizer.Enum
         ///<summary>The string property must be a single char</summary>
         SingleChar,
         ///<summary>The string property represent a valid Guid</summary>
-        ForceValidGuid
+        ValidGuid,
+        ///<summary>The string property represent a valid e-mail</summary>
+        ValidEmail
     }
 }

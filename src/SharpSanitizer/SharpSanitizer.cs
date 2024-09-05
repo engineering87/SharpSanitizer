@@ -13,10 +13,18 @@ namespace SharpSanitizer
     public sealed class SharpSanitizer<T> : ISharpSanitizer<T>
     {
         private readonly Dictionary<string, Constraint> _propertiesConstraints;
+        private readonly ValidationSeverity _validationSeverity;
 
         public SharpSanitizer(Dictionary<string, Constraint> propertiesConstraints)
         {
             _propertiesConstraints = propertiesConstraints;
+            _validationSeverity = ValidationSeverity.Relaxed;
+        }
+
+        public SharpSanitizer(Dictionary<string, Constraint> propertiesConstraints, ValidationSeverity validationSeverity)
+        {
+            _propertiesConstraints = propertiesConstraints;
+            _validationSeverity = validationSeverity;
         }
 
         /// <summary>
@@ -118,15 +126,16 @@ namespace SharpSanitizer
         /// </summary>
         /// <param name="propertyValue">The original property value.</param>
         /// <param name="constraint">The constraint configuration.</param>
+        /// <param name="validationSeverity">The validation severity to apply</param>
         /// <returns></returns>
-        private static string ApplyStringConstraint(string propertyValue, Constraint constraint)
+        private string ApplyStringConstraint(string propertyValue, Constraint constraint)
         {
             var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.NotNull:
                     return propertyValue?.Trim() ?? string.Empty;
-                case ConstraintType.Max:
+                case ConstraintType.MaxLength:
                     {
                         if (constraintRefValue == null)
                         {
@@ -135,7 +144,18 @@ namespace SharpSanitizer
 
                         var trimString = propertyValue?.Trim();
                         return trimString?.Length <= constraintRefValue.Value
-                            ? trimString : trimString?.Substring(0, constraintRefValue.Value);
+                            ? trimString : trimString?[..constraintRefValue.Value];
+                    }
+                case ConstraintType.MinLength:
+                    {
+                        if (constraintRefValue == null)
+                        {
+                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                        }
+
+                        var trimString = propertyValue?.Trim();
+                        return trimString?.Length <= constraintRefValue.Value
+                            ? trimString : trimString?.PadRight(constraintRefValue.Value);
                     }
                 case ConstraintType.MaxNotNull:
                     {
@@ -193,12 +213,30 @@ namespace SharpSanitizer
                         if (propertyValue == null) return string.Empty;
                         return propertyValue.Trim().Substring(0, 1);
                     }
-                case ConstraintType.ForceValidGuid:
+                case ConstraintType.ValidGuid:
                     {
                         if (propertyValue == null) return string.Empty;
                         if(Guid.TryParse(propertyValue.Trim(), out _))
                             return propertyValue?.Trim();
-                        return Guid.NewGuid().ToString();
+                        else
+                        {
+                            if (_validationSeverity == ValidationSeverity.Strict)
+                                throw new ArgumentException($"The property {propertyValue} is not a valid Guid");
+                            return Guid.NewGuid().ToString();
+                        }                        
+                    }
+                case ConstraintType.ValidEmail:
+                    {
+                        if (propertyValue == null) return string.Empty;
+                        string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                        if (Regex.IsMatch(propertyValue.Trim(), pattern, RegexOptions.IgnoreCase))
+                            return propertyValue?.Trim();
+                        else
+                        {
+                            if (_validationSeverity == ValidationSeverity.Strict)
+                                throw new ArgumentException($"The property {propertyValue} is not a valid email");
+                            return string.Empty;
+                        }
                     }
                 default:
                     return propertyValue?.Trim();
@@ -211,12 +249,12 @@ namespace SharpSanitizer
         /// <param name="propertyValue">The original property value.</param>
         /// <param name="constraint">The constraint configuration.</param>
         /// <returns></returns>
-        private static int ApplyIntegerConstraint(int propertyValue, Constraint constraint)
+        private int ApplyIntegerConstraint(int propertyValue, Constraint constraint)
         {
             var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
             {
-                case ConstraintType.Min:
+                case ConstraintType.MinValue:
                     {
                         if (constraintRefValue == null)
                         {
@@ -225,7 +263,7 @@ namespace SharpSanitizer
 
                         return propertyValue > constraintRefValue.Value ? constraintRefValue.Value : propertyValue;
                     }
-                case ConstraintType.Max:
+                case ConstraintType.MaxValue:
                     {
                         if (constraintRefValue == null)
                         {
@@ -254,7 +292,7 @@ namespace SharpSanitizer
         /// <param name="propertyValue"></param>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        private static decimal ApplyDecimalConstraint(decimal propertyValue, Constraint constraint)
+        private decimal ApplyDecimalConstraint(decimal propertyValue, Constraint constraint)
         {
             var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
@@ -281,7 +319,7 @@ namespace SharpSanitizer
         /// <param name="propertyValue"></param>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        private static double ApplyDoubleConstraint(double propertyValue, Constraint constraint)
+        private double ApplyDoubleConstraint(double propertyValue, Constraint constraint)
         {
             var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
@@ -302,23 +340,26 @@ namespace SharpSanitizer
         }
 
         /// <summary>
-        /// TODO
+        /// Apply the current constraint to the object property.
         /// </summary>
         /// <param name="propertyValue"></param>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        private static object ApplyObjectConstraint(object propertyValue, Type propertyType, Constraint constraint)
+        private object ApplyObjectConstraint(object propertyValue, Type propertyType, Constraint constraint)
         {
-            //var constraintRefValue = constraint.ConstraintValue?.IntegerValue;
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.NotNull:
                     {
-                        return Activator.CreateInstance(propertyType);
+                        if(propertyValue == null)
+                            return Activator.CreateInstance(propertyType);
+                        return propertyValue;
                     }
                 case ConstraintType.NoDbNull:
                     {
-                        return null;
+                        if(propertyValue == DBNull.Value)
+                            return null;
+                        return propertyValue;
                     }
                 default:
                     return propertyValue;

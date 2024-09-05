@@ -22,8 +22,8 @@ namespace SharpSanitizer.Test
         {
             var constraints = new Dictionary<string, Constraint>()
             {
-                { "MinIntegerProperty", new Constraint(ConstraintType.Min, MinRef) },
-                { "MaxIntegerProperty", new Constraint(ConstraintType.Max, MaxRef) }
+                { "MinIntegerProperty", new Constraint(ConstraintType.MinValue, MinRef) },
+                { "MaxIntegerProperty", new Constraint(ConstraintType.MaxValue, MaxRef) }
             };
 
             _sharpSanitizer = new SharpSanitizer<FooModel>(constraints);

@@ -7,13 +7,21 @@
 [![Build](https://github.com/engineering87/SharpSanitizer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/engineering87/SharpSanitizer/actions/workflows/dotnet.yml)
 [![stars - SharpSanitizer](https://img.shields.io/github/stars/engineering87/SharpSanitizer?style=social)](https://github.com/engineering87/SharpSanitizer)
 
-SharpSanitizer is a .NET library that allows to sanitize the properties of a generic object by specifying rules and constraints for the individual properties.
-The constraints and contextual sanitization rules are specified parametrically.
+**SharpSanitizer** is a lightweight and flexible .NET library designed to sanitize and validate object properties through a configurable set of rules and constraints.
+It helps ensure data consistency, safety, and quality before persisting or processing objects.
 
-### How it works
-SharpSanitizer proceeds to evaluate each property of the object to be sanitized, checking the presence of rules and constraints specific to the individual properties. Depending on the type of data, it applies a cleaning rule to the final value.
+## Features
+- Strongly-typed, generic sanitizer with minimal boilerplate.
+- Built-in constraints for strings, numbers, collections, and objects.
+- Configurable via `Dictionary<string, Constraint>` for maximum flexibility.
+- Works with both strict and relaxed validation modes.
+- Support for advanced numeric rounding and collection-level checks.
 
-### How to use it
+## How it works
+SharpSanitizer inspects the properties of an object and applies the configured constraints for each property.
+The sanitization process modifies values in place based on the rules you define.
+
+## Usage Example
 To use the SharpSanitizer library, first populate the set of rules to be applied to the object properties. Rules are expressed through a *Dictionary* in which the key matches the **name** of the property and the value is the **constraint** to be applied, for example:
 
 ```csharp
@@ -37,52 +45,43 @@ at this point it is enough to invoke the method `Sanitize` to apply the rules to
 sharpSanitizer.Sanitize(fooModel);
 ```
 
-### Supported rules
+### Supported Constraints
 
-Currently the supported rules are as follows:
+SharpSanitizer now supports a rich set of rules for validation and sanitization:
 
-```csharp
-        ///<summary>The object property cannot be NULL</summary>
-        NotNull,
-        ///<summary>The string property length cannot be greater than the constraint</summary>
-        Max,
-        ///<summary>The string property cannot be NULL or greater than the constraint</summary>
-        MaxNotNull,
-        ///<summary>The integer property cannot be less than the constraint</summary>
-        Min,
-        ///<summary>The integer property cannot be negative</summary>
-        NotNegative,
-        ///<summary>The string property must be uppercase</summary>
-        Uppercase,
-        ///<summary>The string property must be lowercase</summary>
-        Lowercase,
-        ///<summary>The string property cannot contain spaces</summary>
-        NoWhiteSpace,
-        ///<summary>The string property cannot contain special characters</summary>
-        NoSpecialCharacters,
-        ///<summary>The string property must contains only digits</summary>
-        OnlyDigit,
-        ///<summary>The number property must have a limited number of decimals places</summary>
-        MaxDecimalPlaces,
-        ///<summary>The object property cannot be DbNull</summary>
-        NoDbNull,
-        ///<summary>The string property is a valid Datetime if parsed</summary>
-        ValidDatetime,
-        ///<summary>The string property is a valid Datetime if parsed, forced to the MinValue</summary>
-        ForceToValidDatetime,
-        ///<summary>The string property must be a single char</summary>
-        SingleChar,
-        ///<summary>The string property represent a valid Guid</summary>
-        ForceValidGuid
-```
+| Constraint              | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `NotNull`               | Ensures object is not null; initializes if needed.                         |
+| `NoDbNull`              | Converts `DBNull.Value` to `null`.                                         |
+| `NotNullOrEmpty`        | Ensures string is not null or empty.                                       |
+| `NotNullOrWhiteSpace`   | Ensures string is not null or whitespace.                                  |
+| `MaxLength`             | Truncates string to a maximum length.                                      |
+| `MinLength`             | Pads string if shorter than required.                                      |
+| `MaxNotNull`            | Non-null string limited to a maximum length.                              |
+| `Uppercase`             | Converts string to uppercase.                                              |
+| `Lowercase`             | Converts string to lowercase.                                              |
+| `NoWhiteSpace`          | Removes all whitespace.                                                    |
+| `NoSpecialCharacters`   | Removes all non-alphanumeric characters except `_` and `.`.                |
+| `OnlyDigit`             | Keeps only digits in the string.                                           |
+| `ValidDatetime`         | Keeps valid date strings, clears invalid.                                  |
+| `ForceToValidDatetime`  | Forces invalid dates to `DateTime.MinValue`.                               |
+| `SingleChar`            | Enforces single character.                                                 |
+| `ValidGuid`             | Enforces a valid GUID (generates new if invalid in relaxed mode).          |
+| `ValidEmail`            | Enforces a valid email format.                                             |
+| `MaxValue`              | Numeric: clamps to max value.                                              |
+| `MinValue`              | Numeric: clamps to min value.                                              |
+| `NotNegative`           | Numeric: clamps negatives to zero.                                         |
+| `Positive`              | Enforces value ≥ 0.                                                        |
+| `StrictPositive`        | Enforces value > 0.                                                        |
+| `NonZero`               | Disallows zero, adjusts based on severity mode.                            |
+| `MaxDecimalPlaces`      | Truncates decimals to a maximum number of digits.                          |
+| `RoundTo`               | Rounds decimals to a specified number of digits.                           |
+| `NotEmptyCollection`    | Collection: must not be empty.                                             |
+| `DistinctCollection`    | Collection: removes duplicates.  
 
-rules and data types will be extended in future versions.
+## NuGet
 
-### NuGet
-
-The library is available on NuGet packetmanager.
-
-https://www.nuget.org/packages/SharpSanitizer/
+The library is available on [NuGet](https://www.nuget.org/packages/SharpSanitizer/).
 
 ## Contributing
 
@@ -93,8 +92,8 @@ If you'd like to contribute, please fork, fix, commit and send a pull request fo
  * [Fork the repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
  * [Open an issue](https://github.com/engineering87/SharpSanitizer/issues) if you encounter a bug or have a suggestion for improvements/features
 
-### Licensee
+## License
 SharpSanitizer source code is available under MIT License, see license in the source.
 
-### Contact
+## Contact
 Please contact at francesco.delre.87[at]gmail.com for any details.

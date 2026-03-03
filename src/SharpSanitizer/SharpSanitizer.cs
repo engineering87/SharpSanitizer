@@ -70,7 +70,7 @@ namespace SharpSanitizer
                         {
                             if (propertyValue == null) break;
                             var orig = (sbyte)propertyValue;
-                            var sanitized = (sbyte)ApplyInt64Constraint(orig, constraint);
+                            var sanitized = checked((sbyte)ApplyInt64Constraint(orig, constraint));
                             pi.SetValue(obj, sanitized);
                             break;
                         }
@@ -78,7 +78,7 @@ namespace SharpSanitizer
                         {
                             if (propertyValue == null) break;
                             var orig = (byte)propertyValue;
-                            var sanitized = (byte)ApplyUInt64Constraint(orig, constraint);
+                            var sanitized = checked((byte)ApplyUInt64Constraint(orig, constraint));
                             pi.SetValue(obj, sanitized);
                             break;
                         }
@@ -87,14 +87,14 @@ namespace SharpSanitizer
                             if (propertyValue == null) break;
                             var original = (short)propertyValue;
                             var sanitized = ApplyIntegerConstraint(original, constraint);
-                            pi.SetValue(obj, (short)sanitized);
+                            pi.SetValue(obj, checked((short)sanitized));
                             break;
                         }
                     case TypeCode.UInt16:
                         {
                             if (propertyValue == null) break;
                             var orig = (ushort)propertyValue;
-                            var sanitized = (ushort)ApplyUInt64Constraint(orig, constraint);
+                            var sanitized = checked((ushort)ApplyUInt64Constraint(orig, constraint));
                             pi.SetValue(obj, sanitized);
                             break;
                         }
@@ -110,7 +110,7 @@ namespace SharpSanitizer
                         {
                             if (propertyValue == null) break;
                             var orig = (uint)propertyValue;
-                            var sanitized = (uint)ApplyUInt64Constraint(orig, constraint);
+                            var sanitized = checked((uint)ApplyUInt64Constraint(orig, constraint));
                             pi.SetValue(obj, sanitized);
                             break;
                         }
@@ -192,7 +192,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         var trimString = propertyValue?.Trim();
@@ -203,7 +203,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         var trimString = propertyValue?.Trim();
@@ -215,7 +215,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         if (propertyValue == null) return string.Empty;
@@ -226,12 +226,12 @@ namespace SharpSanitizer
                 case ConstraintType.Lowercase:
                     {
                         if (propertyValue == null) return string.Empty;
-                        return propertyValue?.Trim().ToLowerInvariant();
+                        return propertyValue.Trim().ToLowerInvariant();
                     }
                 case ConstraintType.Uppercase:
                     {
                         if (propertyValue == null) return string.Empty;
-                        return propertyValue?.Trim().ToUpperInvariant();
+                        return propertyValue.Trim().ToUpperInvariant();
                     }
                 case ConstraintType.NoWhiteSpace:
                     {
@@ -252,27 +252,27 @@ namespace SharpSanitizer
                     {
                         if (propertyValue == null) return string.Empty;
                         if (DateTime.TryParse(propertyValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                            return propertyValue?.Trim();
+                            return propertyValue.Trim();
                         return string.Empty;
                     }
                 case ConstraintType.ForceToValidDatetime:
                     {
-                        if (propertyValue == null) return DateTime.MinValue.ToString();
+                        if (propertyValue == null) return DateTime.MinValue.ToString(CultureInfo.InvariantCulture);
                         if (DateTime.TryParse(propertyValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                            return propertyValue?.Trim();
-                        return DateTime.MinValue.ToString();
+                            return propertyValue.Trim();
+                        return DateTime.MinValue.ToString(CultureInfo.InvariantCulture);
                     }
                 case ConstraintType.SingleChar:
                     {
                         if (propertyValue == null) return string.Empty;
-                        var trimString = propertyValue?.Trim();
+                        var trimString = propertyValue.Trim();
                         return string.IsNullOrEmpty(trimString) ? string.Empty : trimString.Substring(0, 1);
                     }
                 case ConstraintType.ValidGuid:
                     {
                         if (propertyValue == null) return string.Empty;
                         if(Guid.TryParse(propertyValue.Trim(), out _))
-                            return propertyValue?.Trim();
+                            return propertyValue.Trim();
                         else
                         {
                             if (_validationSeverity == ValidationSeverity.Strict)
@@ -285,7 +285,7 @@ namespace SharpSanitizer
                         if (propertyValue == null) return string.Empty;
                         string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
                         if (Regex.IsMatch(propertyValue.Trim(), pattern, RegexOptions.IgnoreCase))
-                            return propertyValue?.Trim();
+                            return propertyValue.Trim();
                         else
                         {
                             if (_validationSeverity == ValidationSeverity.Strict)
@@ -313,7 +313,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         return Math.Max(propertyValue, constraintRefValue.Value);
@@ -322,7 +322,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         return Math.Min(propertyValue, constraintRefValue.Value);
@@ -366,7 +366,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         return decimal.Round(propertyValue, constraintRefValue.Value, MidpointRounding.ToZero);
@@ -375,12 +375,13 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         return decimal.Round(propertyValue, constraintRefValue.Value, MidpointRounding.AwayFromZero);
                     }
 
+                case ConstraintType.NotNegative:
                 case ConstraintType.Positive:
                     return propertyValue < 0m ? 0m : propertyValue;
 
@@ -413,7 +414,7 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                         }
 
                         double step = Math.Pow(10, constraintRefValue.Value);
@@ -424,13 +425,14 @@ namespace SharpSanitizer
                     {
                         if (constraintRefValue == null)
                         {
-                            throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                            throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
 
                         }
 
                         return Math.Round(propertyValue, constraintRefValue.Value, MidpointRounding.AwayFromZero);
                     }
 
+                case ConstraintType.NotNegative:
                 case ConstraintType.Positive:
                     return propertyValue < 0d ? 0d : propertyValue;
 
@@ -461,14 +463,15 @@ namespace SharpSanitizer
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.MinValue:
-                    if (constraintRefValue == null) throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                    if (constraintRefValue == null) throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                     return Math.Max(propertyValue, (long)constraintRefValue.Value);
 
                 case ConstraintType.MaxValue:
-                    if (constraintRefValue == null) throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                    if (constraintRefValue == null) throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                     return Math.Min(propertyValue, (long)constraintRefValue.Value);
 
                 case ConstraintType.NotNegative:
+                case ConstraintType.Positive:
                     return Math.Max(propertyValue, 0L);
 
                 case ConstraintType.StrictPositive:
@@ -498,12 +501,12 @@ namespace SharpSanitizer
             switch (constraint.ConstraintType)
             {
                 case ConstraintType.MinValue:
-                    if (constraintRefValue == null) throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                    if (constraintRefValue == null) throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                     var minU = (ulong)Math.Max(0, constraintRefValue.Value);
                     return propertyValue < minU ? minU : propertyValue;
 
                 case ConstraintType.MaxValue:
-                    if (constraintRefValue == null) throw new ArgumentNullException("The constraint value is NULL or not set for the specified ConstraintType");
+                    if (constraintRefValue == null) throw new ArgumentException("The constraint value is NULL or not set for the specified ConstraintType");
                     var maxU = (ulong)Math.Max(0, constraintRefValue.Value);
                     return propertyValue > maxU ? maxU : propertyValue;
 
@@ -560,11 +563,19 @@ namespace SharpSanitizer
 
                         if (propertyValue is System.Collections.IEnumerable enumerable)
                         {
-                            var hasAny = enumerable.GetEnumerator().MoveNext();
-                            if (!hasAny)
+                            var enumerator = enumerable.GetEnumerator();
+                            try
                             {
-                                if (_validationSeverity == ValidationSeverity.Strict)
-                                    throw new ArgumentException("Collection is empty.");
+                                var hasAny = enumerator.MoveNext();
+                                if (!hasAny)
+                                {
+                                    if (_validationSeverity == ValidationSeverity.Strict)
+                                        throw new ArgumentException("Collection is empty.");
+                                }
+                            }
+                            finally
+                            {
+                                (enumerator as IDisposable)?.Dispose();
                             }
                         }
                         return propertyValue;
